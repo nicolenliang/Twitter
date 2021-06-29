@@ -57,7 +57,10 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                     .load(tweet.user.publicImgURL)
                     .transform(new CircleCrop())
                     .into(ivProfileImage);
-            tvTimestamp.setText(tweet.getRelativeTime(tweet.createdAt));
+            // formatting timestamp
+            String time = tweet.getRelativeTime(tweet.createdAt);
+            time = time.substring(0, time.indexOf(" ") + 2).replaceAll("\\s", "");
+            tvTimestamp.setText("\u00B7 " + time);
         }
     }
 
