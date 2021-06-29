@@ -1,5 +1,6 @@
 package com.codepath.apps.restclienttemplate;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,6 +19,7 @@ import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.parceler.Parcels;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -28,6 +30,7 @@ import okhttp3.Headers;
 public class TimelineActivity extends AppCompatActivity
 {
     public static final String TAG = "TimelineActivity";
+    private final int REQ_CODE = 20;
 
     TwitterClient client;
     RecyclerView rvTweets;
@@ -80,10 +83,27 @@ public class TimelineActivity extends AppCompatActivity
         {
             // navigate to compose activity
             Intent intent = new Intent(this, ComposeActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent, REQ_CODE);
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
+    {
+        if (requestCode == REQ_CODE && resultCode == RESULT_OK)
+        {
+            // get data from the intent (tweet obj)
+            Tweet tweet = Parcels.unwrap(data.getParcelableExtra("tweet"));
+            // update rv with the tweet:
+            // 1. modify data source to include new tweet
+            tweets.add(0, tweet);
+            // 2. update adapter
+            adapter.notifyItemInserted(0);
+            rvTweets.smoothScrollToPosition(0); // takes away need to scroll up to view new tweet
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void populateHomeTimeline() // API REQUEST
