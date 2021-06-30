@@ -4,6 +4,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -37,6 +38,7 @@ public class TimelineActivity extends AppCompatActivity
     Button btnLogout;
     List<Tweet> tweets;
     TweetsAdapter adapter;
+    SwipeRefreshLayout scTweets;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -66,22 +68,63 @@ public class TimelineActivity extends AppCompatActivity
                 finish(); // return back to Login screen
             }
         });
+
+        // find swipe container view
+        scTweets = findViewById(R.id.scTweets);
+        // set up refresh listener: triggers new data loading
+        scTweets.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
+        {
+            @Override
+            public void onRefresh()
+            {
+                fetchTimelineAsync(0);
+            }
+        });
     }
 
+    // sends network req to fetch updated data
+    public void fetchTimelineAsync(final int page)
+    {
+        client.getHomeTimeline(new JsonHttpResponseHandler()
+        {
+            @Override
+            public void onSuccess(int statusCode, Headers headers, JSON json)
+            {
+                // clear old items from list
+                adapter.clear();
+                // add new items
+                JSONArray jsonArray = json.jsonArray;
+                try
+                {
+                    tweets.addAll(Tweet.fromJsonArray(jsonArray));
+                    adapter.addAll(tweets);
+                    adapter.notifyDataSetChanged();
+                }
+                catch (JSONException e) { Log.e(TAG, "Json exception", e); }
+                // signal that refresh has finished; setRefreshing to false
+                scTweets.setRefreshing(false);
+            }
+            @Override
+            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable)
+            {
+                Log.d(TAG, "Fetch timeline error: " + response, throwable);
+            }
+        });
+    }
+
+    // inflates menu; adds items to menu (if present)
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
-        // inflate the menu; adds items to action if present
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
-
+    // navigates to compose activity
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
         if (item.getItemId() == R.id.compose)
         {
-            // navigate to compose activity
             Intent intent = new Intent(this, ComposeActivity.class);
             startActivityForResult(intent, REQ_CODE);
             return true;
@@ -89,6 +132,7 @@ public class TimelineActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    // populates timeline with new tweet
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
     {
@@ -123,7 +167,6 @@ public class TimelineActivity extends AppCompatActivity
                 catch (JSONException e) { Log.e(TAG, "Json exception", e); }
 
             }
-
             @Override
             public void onFailure(int statusCode, Headers headers, String response, Throwable throwable)
             {

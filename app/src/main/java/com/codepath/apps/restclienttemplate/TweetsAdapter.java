@@ -31,6 +31,17 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         this.tweets = tweets;
     }
 
+    public void clear()
+    {
+        tweets.clear();
+        notifyDataSetChanged();
+    }
+    public void addAll(List<Tweet> list)
+    {
+        tweets.addAll(list);
+        notifyDataSetChanged();
+    }
+
     // define viewholder
     public class ViewHolder extends RecyclerView.ViewHolder
     {
@@ -75,7 +86,6 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         View view = LayoutInflater.from(context).inflate(R.layout.item_tweet, parent, false);
         return new ViewHolder(view);
     }
-
     // bind values based on position of the element
     @Override
     public void onBindViewHolder(@NonNull @NotNull ViewHolder holder, int position)
