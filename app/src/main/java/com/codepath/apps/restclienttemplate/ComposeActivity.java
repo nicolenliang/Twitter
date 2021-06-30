@@ -22,7 +22,7 @@ import okhttp3.Headers;
 public class ComposeActivity extends AppCompatActivity
 {
     public static final String TAG = "ComposeActivity";
-    public static final int MAX_TWEET = 140;
+    public static final int MAX_TWEET = 280;
 
     EditText etCompose;
     Button btnTweet;
@@ -50,15 +50,15 @@ public class ComposeActivity extends AppCompatActivity
                 // check if tweet is valid !! 0 < tweet.length() < 140
                 if (tweet.isEmpty())
                 {
-                    Toast.makeText(ComposeActivity.this, "Sorry, your tweet cannot be empty", Toast.LENGTH_LONG).show();
+                    Toast.makeText(ComposeActivity.this, "Sorry, your tweet cannot be empty", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (tweet.length() > MAX_TWEET)
                 {
-                    Toast.makeText(ComposeActivity.this, "Sorry, your tweet is too long", Toast.LENGTH_LONG).show();
+                    Toast.makeText(ComposeActivity.this, "Sorry, your tweet is too long", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                Toast.makeText(ComposeActivity.this, tweet, Toast.LENGTH_LONG).show();
+                //Toast.makeText(ComposeActivity.this, tweet, Toast.LENGTH_LONG).show();
                 // make an api call to twt publish text
                 client.publishTweet(tweet, new JsonHttpResponseHandler()
                 {
