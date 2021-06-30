@@ -2,6 +2,7 @@ package com.codepath.apps.restclienttemplate;
 
 import android.content.Context;
 import android.text.Layout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 
 import org.jetbrains.annotations.NotNull;
@@ -50,6 +53,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         TextView tvScreenName;
         TextView tvName;
         TextView tvTimestamp;
+        ImageView ivEmbed;
 
         public ViewHolder(@NonNull View itemView)
         {
@@ -59,6 +63,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             tvScreenName = itemView.findViewById(R.id.tvScreenName);
             tvName = itemView.findViewById(R.id.tvName);
             tvTimestamp = itemView.findViewById(R.id.tvTimestamp);
+            ivEmbed = itemView.findViewById(R.id.ivEmbed);
         }
 
         public void bind(Tweet tweet)
@@ -75,6 +80,15 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             String time = tweet.getRelativeTime(tweet.createdAt);
             time = time.substring(0, time.indexOf(" ") + 2).replaceAll("\\s", "");
             tvTimestamp.setText("\u00B7 " + time);
+            if (tweet.embedUrl != null)
+            {
+                Glide.with(context)
+                        .load(tweet.embedUrl)
+                        // TODO: fix spacing for image; roundedcorners gives extra space for some reason
+                        .transform(new RoundedCorners(100))
+                        .into(ivEmbed);
+            }
+            else { ivEmbed.setVisibility(View.GONE); }
         }
     }
 

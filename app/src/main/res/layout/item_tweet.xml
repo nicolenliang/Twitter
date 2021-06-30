@@ -61,4 +61,18 @@
         android:fontFamily="sans-serif-medium"
         android:textColor="#FFFFFF"
         tools:text="nicole" />
+
+    <ImageView
+        android:id="@+id/ivEmbed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvBody"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="5dp"
+        android:layout_toEndOf="@+id/ivProfileImage"
+        android:scaleType="fitStart"
+        tools:srcCompat="@tools:sample/avatars" />
+
 </RelativeLayout>

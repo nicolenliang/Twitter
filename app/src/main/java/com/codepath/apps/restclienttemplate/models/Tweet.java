@@ -1,6 +1,7 @@
 package com.codepath.apps.restclienttemplate.models;
 
 import android.text.format.DateUtils;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,6 +21,7 @@ public class Tweet
     public String createdAt;
     public User user;
     public String timestamp;
+    public String embedUrl;
 
     // empty constructor needed by Parceler lib
     public Tweet() {}
@@ -31,6 +33,17 @@ public class Tweet
         tweet.body = jsonObject.getString("text");
         tweet.createdAt = jsonObject.getString("created_at");
         tweet.user = User.fromJson(jsonObject.getJSONObject("user"));
+        // check if entities obj even exists for this tweet
+        if (!jsonObject.isNull("extended_entities"))
+        {
+            tweet.embedUrl = jsonObject
+                    .getJSONObject("extended_entities")
+                    .getJSONArray("media")
+                    .getJSONObject(0)
+                    .getString("media_url_https");
+        }
+        else { tweet.embedUrl = ""; }
+
         return tweet;
     }
 
@@ -49,7 +62,6 @@ public class Tweet
         String twitterFormat = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
         SimpleDateFormat sf = new SimpleDateFormat(twitterFormat, Locale.ENGLISH);
         sf.setLenient(true);
-
         try
         {
             long dateMillis = sf.parse(rawJsonDate).getTime();
