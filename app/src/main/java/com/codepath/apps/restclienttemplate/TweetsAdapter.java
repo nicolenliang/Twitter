@@ -10,10 +10,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.CenterInside;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.load.resource.bitmap.FitCenter;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.codepath.apps.restclienttemplate.models.Tweet;
@@ -80,15 +84,17 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             String time = tweet.getRelativeTime(tweet.createdAt);
             time = time.substring(0, time.indexOf(" ") + 2).replaceAll("\\s", "");
             tvTimestamp.setText("\u00B7 " + time);
-            if (tweet.embedUrl != null)
+            if (tweet.embedUrl != "")
             {
+                ivEmbed.setVisibility(View.VISIBLE);
                 Glide.with(context)
                         .load(tweet.embedUrl)
-                        // TODO: fix spacing for image; roundedcorners gives extra space for some reason
-                        .transform(new RoundedCorners(100))
                         .into(ivEmbed);
             }
-            else { ivEmbed.setVisibility(View.GONE); }
+            else
+            {
+                ivEmbed.setVisibility(View.GONE);
+            }
         }
     }
 

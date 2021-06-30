@@ -38,6 +38,8 @@
         android:layout_marginTop="2dp"
         android:layout_toEndOf="@+id/ivProfileImage"
         android:textColor="#FFFFFF"
+        android:autoLink="all"
+        android:linksClickable="true"
         tools:text="body body body tweet bobdy tweet !!!!!!! yeah" />
 
     <TextView
@@ -62,8 +64,8 @@
         android:textColor="#FFFFFF"
         tools:text="nicole" />
 
-    <ImageView
-        android:id="@+id/ivEmbed"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cvEmbed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvBody"
@@ -72,7 +74,21 @@
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="5dp"
         android:layout_toEndOf="@+id/ivProfileImage"
-        android:scaleType="fitStart"
-        tools:srcCompat="@tools:sample/avatars" />
+        android:persistentDrawingCache="all"
+        app:cardCornerRadius="15dp">
+
+        <ImageView
+            android:id="@+id/ivEmbed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvBody"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_toEndOf="@+id/ivProfileImage"
+            android:scaleType="centerInside"
+            tools:srcCompat="@tools:sample/avatars" />
+    </androidx.cardview.widget.CardView>
 
 </RelativeLayout>
