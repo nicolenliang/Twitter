@@ -52,7 +52,7 @@ GIF created with [Kap](https://getkap.co/).
 
 ## Notes
 
-Describe any challenges encountered while building the app.
+The more self-guided process for embedding images into the app took me a while to understand, and I had to ask for help. The swipe-to-refresh also caused a little bit of confusion, but eventually I got it. I think the most time-consuming parts of this app were making the minor edits to the UI.
 
 ## Open-source libraries used
 
