@@ -8,9 +8,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.parceler.Parcel;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -20,13 +23,15 @@ public class Tweet
     public String body;
     public String createdAt;
     public User user;
-    public String timestamp;
+    public String timestampR;
     public String embedUrl;
+    public String favCount, rtCount;
+    public Boolean isFav, isRt;
 
     // empty constructor needed by Parceler lib
     public Tweet() {}
 
-    // parses through json obj and returns tweet attributes ?
+    // parses through json obj and returns tweet attributes
     public static Tweet fromJson(JSONObject jsonObject) throws JSONException
     {
         Tweet tweet = new Tweet();
@@ -43,6 +48,10 @@ public class Tweet
                     .getString("media_url_https");
         }
         else { tweet.embedUrl = ""; }
+        tweet.favCount = jsonObject.getString("favorite_count");
+        tweet.rtCount = jsonObject.getString("retweet_count");
+        tweet.isFav = jsonObject.getBoolean("favorited");
+        tweet.isRt = jsonObject.getBoolean("retweeted");
 
         return tweet;
     }
@@ -59,13 +68,15 @@ public class Tweet
     // relative timestamp of when tweet was posted
     public String getRelativeTime(String rawJsonDate)
     {
+        // day of week, month, day, hours:minutes:seconds, timezone, year
         String twitterFormat = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
         SimpleDateFormat sf = new SimpleDateFormat(twitterFormat, Locale.ENGLISH);
-        sf.setLenient(true);
+        sf.setLenient(true); // leniency when parsing thru date/time info
         try
         {
             long dateMillis = sf.parse(rawJsonDate).getTime();
-            timestamp = DateUtils.getRelativeTimeSpanString(dateMillis,
+            // relative time span string: old time, current time, unit of time to compare against
+            timestampR = DateUtils.getRelativeTimeSpanString(dateMillis,
                     System.currentTimeMillis(),
                     DateUtils.SECOND_IN_MILLIS).toString();
         }
@@ -73,6 +84,25 @@ public class Tweet
         {
             e.printStackTrace();
         }
-        return timestamp;
+        return timestampR;
+    }
+
+    // detailed timestamp of when tweet was posted
+    public String getDetailedTime(Tweet tweet) throws ParseException
+    {
+        String tweetCreated = tweet.createdAt;
+        // DateFormat: interprets strings representing dates in the given format
+        DateFormat dfOriginal = new SimpleDateFormat("EEE MMM dd HH:mm:ss ZZZZZ yyyy");
+        // convert from string to date
+        Date tweetDate = dfOriginal.parse(tweetCreated);
+        // check if date was read in with correct formatting
+        Log.i("TweetDate", tweetDate.toString());
+
+        // as date object, we can format however we want
+        DateFormat dfDetailed = new SimpleDateFormat("HH:mm \u00B7 M/dd/yy"); // setting desired format
+        String tweetDetails = dfDetailed.format(tweetDate);
+        Log.i("TweetDate", tweetDetails);
+
+        return tweetDetails;
     }
 }
