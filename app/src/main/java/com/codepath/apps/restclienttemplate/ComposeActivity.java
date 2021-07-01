@@ -74,7 +74,7 @@ public class ComposeActivity extends AppCompatActivity
                             Intent intent = new Intent();
                             intent.putExtra("tweet", Parcels.wrap(tweet)); // must parcel bc We defined tweet obj
                             setResult(RESULT_OK, intent);
-                            finish();
+                            finish(); // returns to previous page
                         }
                         catch (JSONException e)
                         {
