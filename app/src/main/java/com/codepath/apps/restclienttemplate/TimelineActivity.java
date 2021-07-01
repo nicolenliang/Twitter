@@ -80,6 +80,10 @@ public class TimelineActivity extends AppCompatActivity
                 fetchTimelineAsync(0);
             }
         });
+
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setLogo(R.drawable.twitter_logo);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
     }
 
     // sends network req to fetch updated data

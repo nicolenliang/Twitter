@@ -36,11 +36,15 @@
         android:layout_below="@+id/tvScreenName"
         android:layout_marginStart="5dp"
         android:layout_marginTop="2dp"
+        android:layout_marginEnd="10dp"
         android:layout_toEndOf="@+id/ivProfileImage"
-        android:textColor="#FFFFFF"
         android:autoLink="all"
+        android:ellipsize="end"
+        android:lineSpacingExtra="2sp"
         android:linksClickable="true"
-        tools:text="body body body tweet bobdy tweet !!!!!!! yeah" />
+        android:maxLines="5"
+        android:textColor="#FFFFFF"
+        tools:text="body body body tweet bobdy tweet !!!!!!! yeah body body body tweet bobdy tweet !!!!!!! yeah body body body tweet bobdy tweet !!!!!!! yeah body body body tweet bobdy tweet !!!!!!! yeah body body body tweet bobdy tweet !!!!!!! yeah body body body tweet bobdy tweet !!!!!!! yeah body body body tweet bobdy tweet !!!!!!! yeah " />
 
     <TextView
         android:id="@+id/tvTimestamp"
@@ -90,5 +94,63 @@
             android:scaleType="centerInside"
             tools:srcCompat="@tools:sample/avatars" />
     </androidx.cardview.widget.CardView>
+
+    <LinearLayout
+        android:id="@+id/llActions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/cvEmbed"
+        android:layout_marginStart="0dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnReply"
+            style="@android:style/Widget.DeviceDefault.Button.Borderless.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="false"
+            android:layout_alignParentBottom="false"
+            android:layout_marginStart="50dp"
+            android:layout_weight="0"
+            android:drawableLeft="@drawable/vector_compose_dm_fab"
+            android:drawableTint="@color/medium_gray_50"
+            android:text=" "
+            android:textColor="@color/medium_gray_50" />
+
+        <Button
+            android:id="@+id/btnRetweet"
+            style="@android:style/Widget.DeviceDefault.Button.Borderless.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="65dp"
+            android:layout_weight="0"
+            android:drawableLeft="@drawable/ic_vector_retweet_stroke"
+            android:drawableTint="@color/medium_gray_50"
+            android:textColor="@color/medium_gray_50"
+            tools:text="  321" />
+
+        <Button
+            android:id="@+id/btnLike"
+            style="@android:style/Widget.DeviceDefault.Button.Borderless.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="45dp"
+            android:layout_weight="0"
+            android:drawableLeft="@drawable/ic_vector_heart_stroke"
+            android:drawableTint="@color/medium_gray_50"
+            android:textColor="@color/medium_gray_50"
+            tools:text="  321" />
+
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.Barrier
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/llActions"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="@color/medium_red"
+        android:visibility="visible"
+        app:barrierDirection="bottom" />
 
 </RelativeLayout>
