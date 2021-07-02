@@ -2,6 +2,7 @@ package com.codepath.apps.restclienttemplate;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,6 +34,8 @@ public class TimelineActivity extends AppCompatActivity
 {
     public static final String TAG = "TimelineActivity";
     private final int REQ_CODE = 20;
+    public long maxID;
+    private EndlessRecyclerViewScrollListener scrollListener;
 
     TwitterClient client;
     RecyclerView rvTweets;
@@ -39,6 +43,7 @@ public class TimelineActivity extends AppCompatActivity
     List<Tweet> tweets;
     TweetsAdapter adapter;
     SwipeRefreshLayout scTweets;
+    FloatingActionButton composeFab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -52,22 +57,25 @@ public class TimelineActivity extends AppCompatActivity
         tweets = new ArrayList<>();
         adapter = new TweetsAdapter(this, tweets);
         // recycler view setup: 1. layout manager, 2. adapter
-        rvTweets.setLayoutManager(new LinearLayoutManager(this));
-        rvTweets.setAdapter(adapter);
-
-        client = TwitterApp.getRestClient(this);
-        populateHomeTimeline();
-
-        btnLogout = findViewById(R.id.btnLogout);
-        btnLogout.setOnClickListener(new View.OnClickListener()
+        // SIKE WE GOT INFINITE SCROLLING !!!
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        rvTweets.setLayoutManager(linearLayoutManager);
+        // creating scrollListener w same layout manager
+        scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager)
         {
             @Override
-            public void onClick(View v)
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view)
             {
-                client.clearAccessToken(); // forgets who is logged in
-                finish(); // return back to Login screen
+                loadMoreData(page);
             }
-        });
+        };
+        // adding scrollListener to rvTweets
+        rvTweets.addOnScrollListener(scrollListener);
+        rvTweets.setAdapter(adapter);
+
+        // initializing timeline
+        client = TwitterApp.getRestClient(this);
+        populateHomeTimeline();
 
         // find swipe container view
         scTweets = findViewById(R.id.scTweets);
@@ -81,9 +89,49 @@ public class TimelineActivity extends AppCompatActivity
             }
         });
 
+        // floating action button to compose tweet
+        composeFab = findViewById(R.id.composeFab);
+        composeFab.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Intent intent = new Intent(TimelineActivity.this, ComposeActivity.class);
+                startActivityForResult(intent, REQ_CODE);
+            }
+        });
+
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setLogo(R.drawable.twitter_logo);
         getSupportActionBar().setDisplayUseLogoEnabled(true);
+        getSupportActionBar().setTitle("  Twitter");
+    }
+
+    public void loadMoreData(int page)
+    {
+        client.getInfiniteTimeline(maxID, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Headers headers, JSON json)
+            {
+                Log.i(TAG, "+25 !");
+                // add more items
+                JSONArray jsonArray = json.jsonArray;
+                try
+                {
+                    tweets.addAll(Tweet.fromJsonArray(jsonArray));
+                    adapter.addAll(tweets);
+                    adapter.notifyDataSetChanged();
+                    maxID = tweets.get(tweets.size() - 1).id; // update maxID so it keeps loading
+                }
+                catch (JSONException e) { Log.e(TAG, "Json exception", e); }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable)
+            {
+                Log.d(TAG, "no load more data", throwable);
+            }
+        });
     }
 
     // sends network req to fetch updated data
@@ -103,6 +151,7 @@ public class TimelineActivity extends AppCompatActivity
                     tweets.addAll(Tweet.fromJsonArray(jsonArray));
                     adapter.addAll(tweets);
                     adapter.notifyDataSetChanged();
+                    scrollListener.resetState(); // reset scrollListener when we refresh
                 }
                 catch (JSONException e) { Log.e(TAG, "Json exception", e); }
                 // signal that refresh has finished; setRefreshing to false
@@ -123,7 +172,7 @@ public class TimelineActivity extends AppCompatActivity
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
-    // navigates to compose activity
+    // navigates to menubar activities
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
@@ -131,6 +180,12 @@ public class TimelineActivity extends AppCompatActivity
         {
             Intent intent = new Intent(this, ComposeActivity.class);
             startActivityForResult(intent, REQ_CODE);
+            return true;
+        }
+        if (item.getItemId() == R.id.logout)
+        {
+            client.clearAccessToken(); // forgets who is logged in
+            finish();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -167,6 +222,7 @@ public class TimelineActivity extends AppCompatActivity
                 {
                     tweets.addAll(Tweet.fromJsonArray(jsonArray));
                     adapter.notifyDataSetChanged(); // ALWAYS NOTIFY ADAPTER !!
+                    maxID = tweets.get(tweets.size() - 1).id; // maxID gets oldest tweet ID aka last index tweet's ID
                 }
                 catch (JSONException e) { Log.e(TAG, "Json exception", e); }
 
