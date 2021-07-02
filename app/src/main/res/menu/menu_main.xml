@@ -7,4 +7,11 @@
         android:icon="@drawable/ic_vector_compose"
         android:title="Compose"
         app:showAsAction="always" />
+
+    <item
+        android:id="@+id/logout"
+        android:icon="@drawable/ic_logout"
+        android:title="Logout"
+        app:showAsAction="always" />
+
 </menu>
