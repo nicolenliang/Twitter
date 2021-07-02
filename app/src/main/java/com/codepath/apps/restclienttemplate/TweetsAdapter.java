@@ -2,12 +2,15 @@ package com.codepath.apps.restclienttemplate;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -16,11 +19,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.codepath.apps.restclienttemplate.models.Tweet;
+import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
 import org.jetbrains.annotations.NotNull;
 import org.parceler.Parcels;
 
 import java.util.List;
+
+import okhttp3.Headers;
 
 public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder>
 {
@@ -51,7 +57,8 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         TextView tvBody, tvScreenName, tvName, tvTimestamp;
         ImageView ivProfileImage, ivEmbed;
         CardView cvEmbed;
-        Button btnReply, btnRetweet, btnLike;
+        Button btnReply;
+        ToggleButton btnRetweet, btnLike;
 
 
         public ViewHolder(@NonNull View itemView)
@@ -67,11 +74,10 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             btnReply = itemView.findViewById(R.id.btnReply);
             btnRetweet = itemView.findViewById(R.id.btnRetweet);
             btnLike = itemView.findViewById(R.id.btnLike);
-
             itemView.setOnClickListener(this);
         }
 
-        public void bind(Tweet tweet)
+        public void bind(final Tweet tweet)
         {
             tvBody.setText(tweet.body);
             tvScreenName.setText("@" + tweet.user.screenName);
@@ -94,13 +100,74 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             }
             else
             {
-                ivEmbed.setVisibility(View.GONE);
+                //ivEmbed.setVisibility(View.GONE);
                 cvEmbed.setVisibility(View.GONE);
             }
-            btnLike.setText("  " + tweet.favCount);
-            btnRetweet.setText("  " + tweet.rtCount);
+            btnLike.setText(tweet.favCount);
+            btnLike.setButtonDrawable(R.drawable.ic_vector_heart_stroke);
+            btnLike.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
+            {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+                {
+                    int favs;
+                    tweet.isFav = isChecked;
+                    if (!btnLike.isChecked()) // tweet is UNliked, like it
+                    {
+                        favs = Integer.parseInt(tweet.favCount);
+                        favs += 1;
+                        tweet.favCount = String.valueOf(favs); // reassign favCount value after like is added
+                        tweet.isFav = true;
+                        btnLike.setTextOff(tweet.favCount);
+                        btnLike.setButtonDrawable(R.drawable.ic_vector_heart);
+                        btnLike.setTextColor(context.getResources().getColor(R.color.inline_action_like));
+                    }
+                    else // tweet is LIKED, unlike it
+                    {
+                        favs = Integer.parseInt(tweet.favCount);
+                        favs -= 1;
+                        tweet.favCount = String.valueOf(favs);
+                        tweet.isFav = false;
+                        btnLike.setTextOn(tweet.favCount);
+                        btnLike.setButtonDrawable(R.drawable.ic_vector_heart_stroke);
+                        btnLike.setTextColor(context.getResources().getColor(R.color.medium_gray_50));
+                    }
+                }
+            });
+
+            btnRetweet.setText(tweet.rtCount);
+            btnRetweet.setButtonDrawable(R.drawable.ic_vector_retweet_stroke);
+            btnRetweet.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
+            {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+                {
+                    int retweets;
+                    if (!btnRetweet.isChecked()) // tweet is UNretweeted, retweet it
+                    {
+                        retweets = Integer.parseInt(tweet.rtCount);
+                        retweets += 1;
+                        tweet.rtCount = String.valueOf(retweets); // reassign favCount value after like is added
+                        tweet.isRt = true;
+                        btnRetweet.setTextOff(tweet.rtCount);
+                        btnRetweet.setButtonDrawable(R.drawable.ic_vector_retweet);
+                        btnRetweet.setTextColor(context.getResources().getColor(R.color.inline_action_retweet_pressed));
+                    }
+                    else // tweet is RETWEETED, unretweet
+                    {
+                        retweets = Integer.parseInt(tweet.rtCount);
+                        retweets -= 1;
+                        tweet.rtCount = String.valueOf(retweets);
+                        tweet.isRt = false;
+                        btnRetweet.setTextOn(tweet.rtCount);
+                        btnRetweet.setButtonDrawable(R.drawable.ic_vector_retweet_stroke);
+                        btnRetweet.setTextColor(context.getResources().getColor(R.color.medium_gray_50));
+                    }
+                }
+            });
         }
 
+        // start TweetDetailsActivity
         @Override
         public void onClick(View v)
         {
@@ -143,5 +210,4 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
     {
         return tweets.size();
     }
-
 }
