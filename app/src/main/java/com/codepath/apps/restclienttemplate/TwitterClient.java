@@ -56,6 +56,15 @@ public class TwitterClient extends OAuthBaseClient
 		client.get(apiUrl, params, handler);
 	}
 
+	public void getInfiniteTimeline(long maxID, JsonHttpResponseHandler handler)
+	{
+		String apiUrl = getApiUrl("statuses/home_timeline.json");
+		RequestParams params = new RequestParams();
+		params.put("count", 25);
+		params.put("max_id", maxID);
+		client.get(apiUrl, params, handler);
+	}
+
 	public void publishTweet(String tweet, JsonHttpResponseHandler handler)
 	{
 		String apiUrl = getApiUrl("statuses/update.json");
@@ -64,6 +73,20 @@ public class TwitterClient extends OAuthBaseClient
 		client.post(apiUrl, params, "", handler);
 	}
 
+	public void retweet(long tweetID, JsonHttpResponseHandler handler)
+	{
+		String apiUrl = getApiUrl("statuses/retweet/" + tweetID + ".json");
+		RequestParams params = new RequestParams();
+		params.put("id", tweetID);
+		client.post(apiUrl, params, "", handler);
+	}
+	public void unRetweet(long tweetID, JsonHttpResponseHandler handler)
+	{
+		String apiUrl = getApiUrl("statuses/unretweet/" + tweetID + ".json");
+		RequestParams params = new RequestParams();
+		params.put("id", tweetID);
+		client.post(apiUrl, params, "", handler);
+	}
 	/* 1. Define the endpoint URL with getApiUrl and pass a relative path to the endpoint
 	 * 	  i.e getApiUrl("statuses/home_timeline.json");
 	 * 2. Define the parameters to pass to the request (query or body)
