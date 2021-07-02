@@ -27,6 +27,7 @@ public class Tweet
     public String embedUrl;
     public String favCount, rtCount;
     public Boolean isFav, isRt;
+    public long id;
 
     // empty constructor needed by Parceler lib
     public Tweet() {}
@@ -49,9 +50,23 @@ public class Tweet
         }
         else { tweet.embedUrl = ""; }
         tweet.favCount = jsonObject.getString("favorite_count");
+        // formatting 1000+ likes/retweets to i.e. 1.3k
+        if (Double.parseDouble(tweet.favCount) > 1000)
+        {
+            Double favs = Double.parseDouble(tweet.favCount) / 1000.0;
+            String favsS = favs.toString();
+            tweet.favCount = favsS.substring(0, favsS.indexOf(".") + 2) + "k";
+        }
         tweet.rtCount = jsonObject.getString("retweet_count");
+        if (Double.parseDouble(tweet.rtCount) > 1000)
+        {
+            Double retweets = Double.parseDouble(tweet.rtCount) / 1000.0;
+            String retweetsS = retweets.toString();
+            tweet.rtCount = retweetsS.substring(0, retweetsS.indexOf(".") + 2) + "k";
+        }
         tweet.isFav = jsonObject.getBoolean("favorited");
         tweet.isRt = jsonObject.getBoolean("retweeted");
+        tweet.id = jsonObject.getLong("id");
 
         return tweet;
     }
