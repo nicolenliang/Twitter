@@ -2,7 +2,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/btn"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#15202b">
@@ -12,9 +11,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="3dp"
+        android:layout_marginStart="20dp"
         android:layout_marginRight="3dp"
         tools:srcCompat="@tools:sample/avatars" />
 
@@ -27,7 +24,7 @@
         android:layout_marginTop="0dp"
         android:layout_toEndOf="@+id/ivProfileImage"
         android:fontFamily="sans-serif-light"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/medium_gray_50"
         tools:text="/@nicolexwaluigi" />
 
     <TextView
@@ -35,8 +32,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/ivProfileImage"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="10dp"
+        android:layout_marginEnd="20dp"
         android:autoLink="all"
         android:ellipsize="none"
         android:lineSpacingExtra="5sp"
@@ -61,10 +59,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/cvEmbed"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="10dp"
         android:fontFamily="sans-serif-light"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/medium_gray_50"
         tools:text="hh:mm . M/DD/YY" />
 
     <androidx.cardview.widget.CardView
@@ -72,9 +70,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvBody"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginEnd="20dp"
         android:layout_marginBottom="5dp"
         android:persistentDrawingCache="all"
         app:cardCornerRadius="15dp">
@@ -84,10 +82,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tvBody"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginBottom="5dp"
             android:layout_toEndOf="@+id/ivProfileImage"
             android:scaleType="centerInside"
             tools:srcCompat="@tools:sample/avatars" />
@@ -100,7 +94,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/tvTimestamp"
         android:layout_marginStart="0dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:orientation="horizontal">
 
         <Button
@@ -114,33 +108,45 @@
             android:layout_weight="0"
             android:drawableLeft="@drawable/vector_compose_dm_fab"
             android:drawableTint="@color/medium_gray_50"
-            android:text=" "
+            android:text=""
             android:textColor="@color/medium_gray_50" />
 
-        <Button
+        <ToggleButton
             android:id="@+id/btnRetweet"
             style="@android:style/Widget.DeviceDefault.Button.Borderless.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="65dp"
             android:layout_weight="0"
-            android:drawableLeft="@drawable/ic_vector_retweet_stroke"
+            android:checked="true"
             android:drawableTint="@color/medium_gray_50"
             android:textColor="@color/medium_gray_50"
             tools:text="  321" />
 
-        <Button
+        <ToggleButton
             android:id="@+id/btnLike"
             style="@android:style/Widget.DeviceDefault.Button.Borderless.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="45dp"
             android:layout_weight="0"
-            android:drawableLeft="@drawable/ic_vector_heart_stroke"
+            android:checked="true"
             android:drawableTint="@color/medium_gray_50"
             android:textColor="@color/medium_gray_50"
             tools:text="  321" />
 
     </LinearLayout>
+
+    <View
+        android:id="@+id/view2"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_below="@id/llActions"
+        android:layout_alignParentEnd="false"
+        android:layout_alignParentBottom="false"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="@color/medium_gray_30" />
 
 </RelativeLayout>

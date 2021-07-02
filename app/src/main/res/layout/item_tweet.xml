@@ -26,7 +26,7 @@
         android:layout_marginStart="5dp"
         android:layout_toEndOf="@+id/tvName"
         android:fontFamily="sans-serif-light"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/medium_gray_50"
         tools:text="/@nicolexwaluigi" />
 
     <TextView
@@ -54,7 +54,7 @@
         android:layout_marginStart="5dp"
         android:layout_toEndOf="@+id/tvScreenName"
         android:fontFamily="sans-serif-light"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/medium_gray_50"
         tools:text="8m" />
 
     <TextView
@@ -86,13 +86,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tvBody"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginBottom="5dp"
             android:layout_toEndOf="@+id/ivProfileImage"
             android:scaleType="centerInside"
             tools:srcCompat="@tools:sample/avatars" />
+
     </androidx.cardview.widget.CardView>
 
     <LinearLayout
@@ -117,40 +114,40 @@
             android:text=" "
             android:textColor="@color/medium_gray_50" />
 
-        <Button
+        <ToggleButton
             android:id="@+id/btnRetweet"
             style="@android:style/Widget.DeviceDefault.Button.Borderless.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="65dp"
             android:layout_weight="0"
-            android:drawableLeft="@drawable/ic_vector_retweet_stroke"
+            android:checked="true"
             android:drawableTint="@color/medium_gray_50"
             android:textColor="@color/medium_gray_50"
             tools:text="  321" />
 
-        <Button
+        <ToggleButton
             android:id="@+id/btnLike"
             style="@android:style/Widget.DeviceDefault.Button.Borderless.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="45dp"
             android:layout_weight="0"
-            android:drawableLeft="@drawable/ic_vector_heart_stroke"
+            android:checked="true"
             android:drawableTint="@color/medium_gray_50"
-            android:textColor="@color/medium_gray_50"
-            tools:text="  321" />
+            android:textColor="@color/medium_gray_50" />
 
     </LinearLayout>
 
-    <androidx.constraintlayout.widget.Barrier
+    <View
+        android:id="@+id/view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/llActions"
+        android:layout_height="0.5dp"
+        android:layout_alignBottom="@id/llActions"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="false"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
-        android:background="@color/medium_red"
-        android:visibility="visible"
-        app:barrierDirection="bottom" />
+        android:background="@color/medium_gray_30" />
 
 </RelativeLayout>
