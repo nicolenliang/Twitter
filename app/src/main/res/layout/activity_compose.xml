@@ -4,15 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/twitter_dark_background"
     tools:context=".ComposeActivity">
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         app:counterEnabled="true"
         app:counterMaxLength="280"
         app:counterOverflowTextAppearance="@style/TextAppearance.AppCompat.Small"
+        app:counterOverflowTextColor="@color/medium_red"
         app:counterTextAppearance="@style/TextAppearance.AppCompat.Small"
+        app:counterTextColor="@color/medium_gray_50"
         app:hintEnabled="false">
 
         <EditText
@@ -25,21 +30,30 @@
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
+            android:backgroundTint="@color/medium_gray_50"
             android:ems="10"
             android:gravity="start|top"
             android:hint="What's happening?"
             android:inputType="textMultiLine"
-            android:minLines="5" />
+            android:minLines="5"
+            android:textColor="#FFFFFF"
+            android:textColorHint="@color/medium_gray_50"
+            android:textIsSelectable="true"
+            tools:text="bobobfoboboboboboboobobobobboobobobfoboboboboboboobobobobboobobobfoboboboboboboobobobobboobobobfoboboboboboboobobobobboobobobfoboboboboboboobobobobboobobobfoboboboboboboobobobobboobobobfoboboboboboboobobobobboobobobfoboboboboboboobobobobboobobobfoboboboboboboobobobobboogggggggggg" />
 
         <Button
             android:id="@+id/btnTweet"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/Widget.AppCompat.Button"
+            android:layout_width="70dp"
+            android:layout_height="30dp"
             android:layout_below="@+id/etCompose"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="10dp"
-            android:text="Tweet" />
+            android:layout_gravity="end"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="5dp"
+            android:background="@drawable/rounded_button"
+            android:text="Tweet"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF" />
     </com.google.android.material.textfield.TextInputLayout>
 
 </RelativeLayout>
